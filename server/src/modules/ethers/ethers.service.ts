@@ -120,14 +120,14 @@ export class EthersService {
     // ⚠️ 리턴은 ether 단위로 리턴합니다.(wei => ether)
 
     console.log(abi.find((item) => item.name === "getContractBalance"));
-    console.log("res ghdfgdfg");
+    console.log("hellooooooooo");
 
     const res = await this.contract.getContractBalance();
     console.log("res", res);
     return formatEther(res);
 
-    const balance = await this.provider.getBalance(this.contract.target);
-    return formatEther(balance);
+    // const balance = await this.provider.getBalance(this.contract.target);
+    // return formatEther(balance);
   }
 
   async deposit(value: number) {

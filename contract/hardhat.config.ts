@@ -15,6 +15,10 @@ const config: HardhatUserConfig = {
       url: "http://127.0.0.1:7545",
       accounts: [privateKey!],
     },
+    kairos: {
+      url: "https://public-en-kairos.node.kaia.io",
+      accounts: [privateKey || ""],
+    },
   },
 };
 
