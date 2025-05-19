@@ -61,13 +61,17 @@ export class SolidityConceptsService {
       // Todo: updateValue의값을 리턴합니다.
       // ⚠️ bigint 타입은 JSON으로 변환 시 string으로 변환 필요
       const res = await this.ethersService.updateValue(value);
-      const parsed = JSON.parse(
-        JSON.stringify(res, (key, value) =>
-          typeof value === "bigint" ? value.toString() : value
-        )
-      );
+      // const parsed = JSON.parse(
+      //   JSON.stringify(res, (key, value) =>
+      //     typeof value === "bigint" ? value.toString() : value
+      //   )
+      // );
 
-      return parsed;
+      // return parsed;
+      return {
+        oldValue: res.oldValue.toString(),
+        newValue: res.newValue.toString(),
+      };
     } catch (error) {
       //  Todo: 에러를 응답합니다.(exceptions.createBadRequestException(error.message))
       throw exceptions.createBadRequestException(error.message);
@@ -102,6 +106,8 @@ export class SolidityConceptsService {
   async sendEther(address: string, value: number) {
     try {
       // Todo: sendEther의값을 리턴합니다.
+      console.log("address", address);
+      console.log("value", value);
       return await this.ethersService.sendEther(address, value);
     } catch (error) {
       //  Todo: 에러를 응답합니다.(exceptions.createBadRequestException(error.message))

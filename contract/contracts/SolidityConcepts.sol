@@ -2,10 +2,13 @@
 pragma solidity ^0.8.0;
 
 contract SolidityConcepts {
-    address public immutable owner = msg.sender;
-
     uint256 public constant FIXED_VALUE = 100;
+    address public immutable owner;
     uint256 public value = 50;
+
+    constructor() {
+        owner = msg.sender;
+    }
 
     event ValueChanged(uint256 oldValue, uint256 newValue);
 
@@ -43,7 +46,9 @@ contract SolidityConcepts {
 
     function sendEther(address payable _addr) public payable {
         require(msg.value > 0, "Must send ether");
-        _addr.transfer(msg.value);
+        // _addr.transfer(msg.value); // transfer
+        (bool success, ) = _addr.call{value: msg.value}(""); // call
+        require(success, "Transfer failed");
     }
 
     function getContractBalance() public view returns (uint256) {
@@ -51,7 +56,9 @@ contract SolidityConcepts {
     }
 
     function withDraw() public onlyOwner {
-        payable(msg.sender).transfer(address(this).balance);
+        // payable(msg.sender).transfer(address(this).balance); // transfer
+        (bool success, ) = msg.sender.call{value: address(this).balance}(""); // call
+        require(success, "Transfer failed");
     }
 
     receive() external payable {}

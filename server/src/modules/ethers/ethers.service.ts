@@ -96,10 +96,20 @@ export class EthersService {
     const tx = await this.contract.updateValue(value);
     const receipt = await tx.wait();
 
-    const log = receipt.logs[0];
-    const parsedLog = this.contract.interface.parseLog(log);
-    result.oldValue = parsedLog?.args[0];
-    result.newValue = parsedLog?.args[1];
+    for (const log of receipt.logs) {
+      const parsedLog = this.contract.interface.parseLog(log) as LogDescription;
+
+      console.log("parsedLog", parsedLog);
+
+      if (parsedLog.fragment.name === "ValueChanged") {
+        result.oldValue = parsedLog?.args[0];
+        result.newValue = parsedLog?.args[1];
+      }
+    }
+    // const log = receipt.logs[0];
+    // const parsedLog = this.contract.interface.parseLog(log);
+    // result.oldValue = parsedLog?.args[0];
+    // result.newValue = parsedLog?.args[1];
     return result;
   }
 
@@ -111,7 +121,9 @@ export class EthersService {
   async sendEther(address: string, value: number) {
     // Todo: sendEther의값을 리턴합니다.
     // ⚠️ setter함수는 tx 확정 후 영수증을 리턴합니다.(wait)
-    const tx = await this.contract.sendEther(address, value);
+    const tx = await this.contract.sendEther(address, {
+      value: parseEther(value.toString()),
+    });
     return tx.wait();
   }
 
